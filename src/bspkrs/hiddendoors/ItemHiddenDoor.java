@@ -1,8 +1,9 @@
-package net.minecraft.src;
+package bspkrs.hiddendoors;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -22,8 +23,41 @@ public class ItemHiddenDoor extends Item
         {
             return false;
         }
+        else
+        {
+            ++j;
+            Block block = HiddenDoors.door;
+            
+            if (entityplayer.canPlayerEdit(i, j, k, l, itemstack) && entityplayer.canPlayerEdit(i, j + 1, k, l, itemstack))
+            {
+                if (!block.canPlaceBlockAt(world, i, j, k))
+                {
+                    return false;
+                }
+                else
+                {
+                    int i1 = MathHelper.floor_double((entityplayer.rotationYaw + 180.0F) * 4.0F / 360.0F - 0.5D) & 3;
+                    ItemDoor.placeDoorBlock(world, i, j, k, i1, block);
+                    --itemstack.stackSize;
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    /*
+    @Override
+    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l, float m, float n, float o)
+    {
+        if (l != 1)
+        {
+            return false;
+        }
         j++;
-        Block block = mod_HiddenDoors.door;
+        Block block = HiddenDoors.door;
         if (!block.canPlaceBlockAt(world, i, j, k))
         {
             return false;
@@ -65,13 +99,13 @@ public class ItemHiddenDoor extends Item
             i1 = i1 - 1 & 3;
             i1 += 4;
         }
-        world.editingBlocks = true;
-        world.setBlockAndMetadataWithNotify(i, j, k, block.blockID, i1);
-        world.setBlockAndMetadataWithNotify(i, j + 1, k, block.blockID, i1 + 8);
-        world.editingBlocks = false;
+        //world.editingBlocks = true;
+        world.setBlock(i, j, k, block.blockID, i1, 3);
+        world.setBlock(i, j + 1, k, block.blockID, i1 + 8, 3);
+        //world.editingBlocks = false;
         world.notifyBlocksOfNeighborChange(i, j, k, block.blockID);
         world.notifyBlocksOfNeighborChange(i, j + 1, k, block.blockID);
         itemstack.stackSize--;
         return true;
-    }
+    }*/
 }

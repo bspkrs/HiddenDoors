@@ -1,22 +1,23 @@
 package net.minecraft.src;
 
-import java.io.File;
-
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import bspkrs.hiddendoors.HiddenDoors;
+import bspkrs.util.ModVersionChecker;
 
 public class mod_HiddenDoors extends BaseMod
 {
-    public static String modDir;
-    private static Props props;
-    public static int    iOff;
-    public static Block  door;
-    public static Item   itemDoor;
+    public static boolean     allowUpdateCheck;
+    private ModVersionChecker versionChecker;
+    private String            versionURL = "http://bspk.rs/Minecraft/1.5.1/crystalWing.version";
+    private String            mcfTopic   = "http://www.minecraftforum.net/topic/1009577-";
     
     public mod_HiddenDoors()
-    {}
+    {
+        allowUpdateCheck = mod_bspkrsCore.allowUpdateCheck;
+        
+        if (allowUpdateCheck)
+            versionChecker = new ModVersionChecker(getName(), getVersion(), versionURL, mcfTopic);
+    }
     
     @Override
     public String getName()
@@ -30,36 +31,33 @@ public class mod_HiddenDoors extends BaseMod
         return "ML 1.5.1.r01";
     }
     
-    private static String getAppdata()
+    @Override
+    public String getPriorities()
     {
-        return Minecraft.getMinecraftDir().getPath();
+        return "required-after:mod_bspkrsCore";
     }
     
     @Override
     public void load()
     {
-        ModLoader.registerBlock(door);
-        ModLoader.addName(itemDoor, "Hidden Door");
-        ModLoader.addRecipe(new ItemStack(itemDoor), new Object[]
+        if (allowUpdateCheck)
         {
-                "XX", "XX", "XX", Character.valueOf('X'), Block.bookShelf
-        });
+            versionChecker.checkVersionWithLogging();
+            ModLoader.setInGameHook(this, true, true);
+        }
+        
+        HiddenDoors.init();
     }
     
-    public static void prepareProps()
+    @Override
+    public boolean onTickInGame(float f, Minecraft mc)
     {
-        props.getInt("blockHiddenDoor", 255);
-        props.getInt("itemHiddenDoor", 1600);
-    }
-    
-    static
-    {
-        modDir = "/TehKrush/";
-        props = new Props((new File((new StringBuilder()).append(getAppdata()).append("/config/").append("mod_HiddenDoors.cfg").toString())).getPath());
-        iOff = 256;
-        prepareProps();
-        door = (new BlockHiddenDoor(props.getInt("blockHiddenDoor"))).setHardness(1.2F).setStepSound(Block.soundWoodFootstep).setBlockName("hiddenDoor");
-        itemDoor = (new ItemHiddenDoor(props.getInt("itemHiddenDoor") - iOff)).setIconIndex(ModLoader.addOverride("/gui/items.png", (new StringBuilder()).append(modDir).append("itemHiddenDoor.png").toString())).setItemName("hiddenDoorItem");
-        props.save();
+        if (allowUpdateCheck)
+        {
+            if (!versionChecker.isCurrentVersion())
+                for (String msg : versionChecker.getInGameMessage())
+                    mc.thePlayer.addChatMessage(msg);
+        }
+        return false;
     }
 }

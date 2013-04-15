@@ -1,10 +1,11 @@
-package net.minecraft.src;
+package bspkrs.hiddendoors;
 
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -13,34 +14,37 @@ public class BlockHiddenDoor extends BlockDoor
     public BlockHiddenDoor(int i)
     {
         super(i, Material.wood);
-        blockIndexInTexture = 0;
     }
     
     @Override
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    public Icon getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
+        int blockBelow;
+        
         if (iblockaccess.getBlockId(i, j - 1, k) == blockID)
         {
-            if (iblockaccess.getBlockId(i, j - 2, k) == Block.grass.blockID)
+            blockBelow = iblockaccess.getBlockId(i, j - 2, k);
+            if (blockBelow == Block.grass.blockID || blockBelow == Block.mycelium.blockID)
             {
-                return Block.dirt.blockIndexInTexture;
+                return Block.dirt.getBlockTexture(iblockaccess, i, j - 2, k, l);
             }
             if (iblockaccess.getBlockId(i, j - 2, k) > 0)
             {
-                return Block.blocksList[iblockaccess.getBlockId(i, j - 2, k)].getBlockTextureFromSideAndMetadata(6, iblockaccess.getBlockMetadata(i, j - 2, k));
+                return Block.blocksList[iblockaccess.getBlockId(i, j - 2, k)].getIcon(6, iblockaccess.getBlockMetadata(i, j - 2, k));
             }
         }
-        if (iblockaccess.getBlockId(i, j - 1, k) == Block.grass.blockID)
+        blockBelow = iblockaccess.getBlockId(i, j - 1, k);
+        if (blockBelow == Block.grass.blockID || blockBelow == Block.mycelium.blockID)
         {
-            return Block.dirt.blockIndexInTexture;
+            return Block.dirt.getBlockTexture(iblockaccess, i, j - 1, k, l);
         }
         if (iblockaccess.getBlockId(i, j - 1, k) > 0)
         {
-            return Block.blocksList[iblockaccess.getBlockId(i, j - 1, k)].getBlockTextureFromSideAndMetadata(6, iblockaccess.getBlockMetadata(i, j - 1, k));
+            return Block.blocksList[iblockaccess.getBlockId(i, j - 1, k)].getIcon(6, iblockaccess.getBlockMetadata(i, j - 1, k));
         }
         else
         {
-            return 0;
+            return null;
         }
     }
     
@@ -52,7 +56,7 @@ public class BlockHiddenDoor extends BlockDoor
         {
             if (world.getBlockId(i, j - 1, k) != blockID)
             {
-                world.setBlockWithNotify(i, j, k, 0);
+                world.setBlock(i, j, k, 0, 0, 3);
             }
             if (l > 0 && Block.blocksList[l].canProvidePower())
             {
@@ -64,15 +68,15 @@ public class BlockHiddenDoor extends BlockDoor
             boolean flag = false;
             if (world.getBlockId(i, j + 1, k) != blockID)
             {
-                world.setBlockWithNotify(i, j, k, 0);
+                world.setBlock(i, j, k, 0, 0, 3);
             }
             if (!world.isBlockNormalCube(i, j - 1, k))
             {
-                world.setBlockWithNotify(i, j, k, 0);
+                world.setBlock(i, j, k, 0, 0, 3);
                 flag = true;
                 if (world.getBlockId(i, j + 1, k) == blockID)
                 {
-                    world.setBlockWithNotify(i, j + 1, k, 0);
+                    world.setBlock(i, j + 1, k, 0, 0, 3);
                 }
             }
             if (flag)
@@ -91,14 +95,8 @@ public class BlockHiddenDoor extends BlockDoor
     }
     
     @Override
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
-    {
-        return blockIndexInTexture;
-    }
-    
-    @Override
     public int idDropped(int i, Random random, int j)
     {
-        return mod_HiddenDoors.itemDoor.itemID;
+        return HiddenDoors.itemDoor.itemID;
     }
 }
