@@ -23,7 +23,7 @@ public class mod_HiddenDoors extends BaseMod
     @Override
     public String getVersion()
     {
-        return "ML 1.5.1.r01";
+        return "ML " + HiddenDoors.VERSION_NUMBER;
     }
     
     @Override

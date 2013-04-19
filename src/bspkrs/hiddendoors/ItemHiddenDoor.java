@@ -1,6 +1,8 @@
 package bspkrs.hiddendoors;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDoor;
@@ -10,10 +12,14 @@ import net.minecraft.world.World;
 
 public class ItemHiddenDoor extends Item
 {
-    public ItemHiddenDoor(int i)
+    private Material doorMaterial;
+    
+    public ItemHiddenDoor(int i, Material material)
     {
         super(i);
-        maxStackSize = 1;
+        this.doorMaterial = material;
+        this.maxStackSize = 1;
+        this.setCreativeTab(CreativeTabs.tabRedstone);
     }
     
     @Override
@@ -26,7 +32,16 @@ public class ItemHiddenDoor extends Item
         else
         {
             ++j;
-            Block block = HiddenDoors.door;
+            Block block;
+            
+            if (this.doorMaterial == Material.wood)
+            {
+                block = HiddenDoors.blockHiddenDoorWood;
+            }
+            else
+            {
+                block = HiddenDoors.blockHiddenDoorIron;
+            }
             
             if (entityplayer.canPlayerEdit(i, j, k, l, itemstack) && entityplayer.canPlayerEdit(i, j + 1, k, l, itemstack))
             {
@@ -48,64 +63,4 @@ public class ItemHiddenDoor extends Item
             }
         }
     }
-    /*
-    @Override
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l, float m, float n, float o)
-    {
-        if (l != 1)
-        {
-            return false;
-        }
-        j++;
-        Block block = HiddenDoors.door;
-        if (!block.canPlaceBlockAt(world, i, j, k))
-        {
-            return false;
-        }
-        int i1 = MathHelper.floor_double((((entityplayer.rotationYaw + 180F) * 4F) / 360F) - 0.5D) & 3;
-        byte byte0 = 0;
-        byte byte1 = 0;
-        if (i1 == 0)
-        {
-            byte1 = 1;
-        }
-        if (i1 == 1)
-        {
-            byte0 = -1;
-        }
-        if (i1 == 2)
-        {
-            byte1 = -1;
-        }
-        if (i1 == 3)
-        {
-            byte0 = 1;
-        }
-        int j1 = (world.isBlockNormalCube(i - byte0, j, k - byte1) ? 1 : 0) + (world.isBlockNormalCube(i - byte0, j + 1, k - byte1) ? 1 : 0);
-        int k1 = (world.isBlockNormalCube(i + byte0, j, k + byte1) ? 1 : 0) + (world.isBlockNormalCube(i + byte0, j + 1, k + byte1) ? 1 : 0);
-        boolean flag = world.getBlockId(i - byte0, j, k - byte1) == block.blockID || world.getBlockId(i - byte0, j + 1, k - byte1) == block.blockID;
-        boolean flag1 = world.getBlockId(i + byte0, j, k + byte1) == block.blockID || world.getBlockId(i + byte0, j + 1, k + byte1) == block.blockID;
-        boolean flag2 = false;
-        if (flag && !flag1)
-        {
-            flag2 = true;
-        }
-        else if (k1 > j1)
-        {
-            flag2 = true;
-        }
-        if (flag2)
-        {
-            i1 = i1 - 1 & 3;
-            i1 += 4;
-        }
-        //world.editingBlocks = true;
-        world.setBlock(i, j, k, block.blockID, i1, 3);
-        world.setBlock(i, j + 1, k, block.blockID, i1 + 8, 3);
-        //world.editingBlocks = false;
-        world.notifyBlocksOfNeighborChange(i, j, k, block.blockID);
-        world.notifyBlocksOfNeighborChange(i, j + 1, k, block.blockID);
-        itemstack.stackSize--;
-        return true;
-    }*/
 }

@@ -7,21 +7,20 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 
 public class BlockHiddenDoor extends BlockDoor
 {
-    public BlockHiddenDoor(int i)
+    public BlockHiddenDoor(int i, Material material)
     {
-        super(i, Material.wood);
+        super(i, material);
     }
     
     @Override
     public Icon getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
-        int blockBelow;
+        int blockBelow = iblockaccess.getBlockId(i, j - 1, k);
         
-        if (iblockaccess.getBlockId(i, j - 1, k) == blockID)
+        if (blockBelow == blockID)
         {
             blockBelow = iblockaccess.getBlockId(i, j - 2, k);
             if (blockBelow == Block.grass.blockID || blockBelow == Block.mycelium.blockID)
@@ -33,7 +32,7 @@ public class BlockHiddenDoor extends BlockDoor
                 return Block.blocksList[iblockaccess.getBlockId(i, j - 2, k)].getIcon(6, iblockaccess.getBlockMetadata(i, j - 2, k));
             }
         }
-        blockBelow = iblockaccess.getBlockId(i, j - 1, k);
+        
         if (blockBelow == Block.grass.blockID || blockBelow == Block.mycelium.blockID)
         {
             return Block.dirt.getBlockTexture(iblockaccess, i, j - 1, k, l);
@@ -48,10 +47,11 @@ public class BlockHiddenDoor extends BlockDoor
         }
     }
     
-    @Override
+    /*@Override
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
         int i1 = world.getBlockMetadata(i, j, k);
+        
         if ((i1 & 8) != 0)
         {
             if (world.getBlockId(i, j - 1, k) != blockID)
@@ -92,11 +92,13 @@ public class BlockHiddenDoor extends BlockDoor
                 onPoweredBlockChange(world, i, j, k, flag1);
             }
         }
-    }
+    }*/
     
     @Override
     public int idDropped(int i, Random random, int j)
     {
-        return HiddenDoors.itemDoor.itemID;
+        return (i & 8) != 0 ? 0 : (this.blockMaterial == Material.iron
+                ? HiddenDoors.itemHiddenDoorIron.itemID
+                : HiddenDoors.itemHiddenDoorWood.itemID);
     }
 }
