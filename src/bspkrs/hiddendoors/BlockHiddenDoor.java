@@ -13,6 +13,7 @@ public class BlockHiddenDoor extends BlockDoor
     public BlockHiddenDoor(int i, Material material)
     {
         super(i, material);
+        disableStats();
     }
     
     @Override
@@ -47,57 +48,10 @@ public class BlockHiddenDoor extends BlockDoor
         }
     }
     
-    /*@Override
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
-    {
-        int i1 = world.getBlockMetadata(i, j, k);
-        
-        if ((i1 & 8) != 0)
-        {
-            if (world.getBlockId(i, j - 1, k) != blockID)
-            {
-                world.setBlock(i, j, k, 0, 0, 3);
-            }
-            if (l > 0 && Block.blocksList[l].canProvidePower())
-            {
-                canPlaceBlockOnSide(world, i, j - 1, k, l);
-            }
-        }
-        else
-        {
-            boolean flag = false;
-            if (world.getBlockId(i, j + 1, k) != blockID)
-            {
-                world.setBlock(i, j, k, 0, 0, 3);
-            }
-            if (!world.isBlockNormalCube(i, j - 1, k))
-            {
-                world.setBlock(i, j, k, 0, 0, 3);
-                flag = true;
-                if (world.getBlockId(i, j + 1, k) == blockID)
-                {
-                    world.setBlock(i, j + 1, k, 0, 0, 3);
-                }
-            }
-            if (flag)
-            {
-                if (!world.isRemote)
-                {
-                    dropBlockAsItem(world, i, j, k, i1, 0);
-                }
-            }
-            else if (l > 0 && Block.blocksList[l].canProvidePower())
-            {
-                boolean flag1 = world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k);
-                onPoweredBlockChange(world, i, j, k, flag1);
-            }
-        }
-    }*/
-    
     @Override
     public int idDropped(int i, Random random, int j)
     {
-        return (i & 8) != 0 ? 0 : (this.blockMaterial == Material.iron
+        return (i & 8) != 0 ? 0 : (blockMaterial == Material.iron
                 ? HiddenDoors.itemHiddenDoorIron.itemID
                 : HiddenDoors.itemHiddenDoorWood.itemID);
     }

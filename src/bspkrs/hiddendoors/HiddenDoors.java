@@ -10,19 +10,25 @@ import bspkrs.util.BSPropRegistry;
 
 public class HiddenDoors
 {
-    public static final String VERSION_NUMBER    = "1.5.1.r02";
-    public static String       modDir            = "hiddendoors";
-    public static int          iOff              = 256;
+    public static final String VERSION_NUMBER        = "1.5.1.r02";
     public static Block        blockHiddenDoorWood;
     public static Block        blockHiddenDoorIron;
     public static Item         itemHiddenDoorWood;
     public static Item         itemHiddenDoorIron;
     @BSProp
-    public static int          hiddenDoorBlockID = 1699;
+    public static int          hiddenDoorWoodBlockID = 1699;
     @BSProp
-    public static int          hiddenDoorItemID  = 16099;
+    public static int          hiddenDoorIronBlockID = 1698;
+    //@BSProp
+    public static int          hiddenTrapDoorBlockID = 1697;
+    @BSProp
+    public static int          hiddenDoorWoodItemID  = 16099;
+    @BSProp
+    public static int          hiddenDoorIronItemID  = 16098;
+    //@BSProp
+    public static int          hiddenTrapDoorItemID  = 16097;
     
-    private static boolean     initialized       = false;
+    private static boolean     initialized           = false;
     
     public static void init()
     {
@@ -30,25 +36,49 @@ public class HiddenDoors
         {
             BSPropRegistry.registerPropHandler(HiddenDoors.class);
             
-            blockHiddenDoorWood = (new BlockHiddenDoor(hiddenDoorBlockID, Material.wood)).setHardness(1.2F)
+            blockHiddenDoorWood = (new BlockHiddenDoor(hiddenDoorWoodBlockID, Material.wood)).setHardness(1.2F)
                     .setStepSound(Block.soundWoodFootstep).setUnlocalizedName("hiddenWoodenDoor");
-            itemHiddenDoorWood = (new ItemHiddenDoor(hiddenDoorItemID, Material.wood)).setUnlocalizedName("itemHiddenDoorWood");
+            itemHiddenDoorWood = (new ItemHiddenDoor(hiddenDoorWoodItemID, Material.wood)).setUnlocalizedName("itemHiddenDoorWood");
             
-            blockHiddenDoorIron = (new BlockHiddenDoor(hiddenDoorBlockID + 1, Material.iron)).setHardness(1.2F)
-                    .setStepSound(Block.soundWoodFootstep).setUnlocalizedName("hiddenIronDoor");
-            itemHiddenDoorIron = (new ItemHiddenDoor(hiddenDoorItemID + 1, Material.iron)).setUnlocalizedName("itemHiddenDoorIron");
+            blockHiddenDoorIron = (new BlockHiddenDoor(hiddenDoorIronBlockID, Material.iron)).setHardness(5.0F)
+                    .setStepSound(Block.soundMetalFootstep).setUnlocalizedName("hiddenIronDoor");
+            itemHiddenDoorIron = (new ItemHiddenDoor(hiddenDoorIronItemID, Material.iron)).setUnlocalizedName("itemHiddenDoorIron");
             
             ModLoader.registerBlock(blockHiddenDoorWood);
             ModLoader.registerBlock(blockHiddenDoorIron);
-            ModLoader.addName(itemHiddenDoorWood, "Hidden Wood Door");
+            ModLoader.addName(itemHiddenDoorWood, "Hidden Wooden Door");
             ModLoader.addName(itemHiddenDoorIron, "Hidden Iron Door");
             ModLoader.addRecipe(new ItemStack(itemHiddenDoorWood), new Object[]
             {
-                    "XXX", "XDX", "XXX", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Block.doorWood
+                    "XXG", "XDG", "XXG", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorWood, Character.valueOf('G'), Block.leaves
+            });
+            ModLoader.addRecipe(new ItemStack(itemHiddenDoorWood), new Object[]
+            {
+                    "GXX", "GDX", "GXX", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorWood, Character.valueOf('G'), Block.leaves
+            });
+            ModLoader.addRecipe(new ItemStack(itemHiddenDoorWood), new Object[]
+            {
+                    "XXG", "XDG", "XXG", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorWood, Character.valueOf('G'), Block.vine
+            });
+            ModLoader.addRecipe(new ItemStack(itemHiddenDoorWood), new Object[]
+            {
+                    "GXX", "GDX", "GXX", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorWood, Character.valueOf('G'), Block.vine
             });
             ModLoader.addRecipe(new ItemStack(itemHiddenDoorIron), new Object[]
             {
-                    "XXX", "XDX", "XXX", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Block.doorIron
+                    "XXG", "XDG", "XXG", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorIron, Character.valueOf('G'), Block.leaves
+            });
+            ModLoader.addRecipe(new ItemStack(itemHiddenDoorIron), new Object[]
+            {
+                    "GXX", "GDX", "GXX", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorIron, Character.valueOf('G'), Block.leaves
+            });
+            ModLoader.addRecipe(new ItemStack(itemHiddenDoorIron), new Object[]
+            {
+                    "XXG", "XDG", "XXG", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorIron, Character.valueOf('G'), Block.vine
+            });
+            ModLoader.addRecipe(new ItemStack(itemHiddenDoorIron), new Object[]
+            {
+                    "GXX", "GDX", "GXX", Character.valueOf('X'), Block.bookShelf, Character.valueOf('D'), Item.doorIron, Character.valueOf('G'), Block.vine
             });
             
             initialized = true;
