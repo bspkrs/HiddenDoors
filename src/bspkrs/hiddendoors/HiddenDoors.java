@@ -7,10 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
 import bspkrs.util.BSProp;
 import bspkrs.util.BSPropRegistry;
+import bspkrs.util.Const;
 
 public class HiddenDoors
 {
-    public static final String VERSION_NUMBER        = "1.5.1.r02";
+    public static final String VERSION_NUMBER        = Const.MCVERSION + ".r01";
     public static Block        blockHiddenDoorWood;
     public static Block        blockHiddenDoorIron;
     public static Item         itemHiddenDoorWood;

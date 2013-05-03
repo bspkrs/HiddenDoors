@@ -2,13 +2,14 @@ package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
 import bspkrs.hiddendoors.HiddenDoors;
+import bspkrs.util.Const;
 import bspkrs.util.ModVersionChecker;
 
 public class mod_HiddenDoors extends BaseMod
 {
     public static boolean     allowUpdateCheck;
     private ModVersionChecker versionChecker;
-    private String            versionURL = "http://bspk.rs/Minecraft/1.5.1/hiddenDoors.version";
+    private String            versionURL = "http://bspk.rs/Minecraft/" + Const.MCVERSION + "/hiddenDoors.version";
     private String            mcfTopic   = "http://www.minecraftforum.net/topic/1773498-";
     
     public mod_HiddenDoors()
